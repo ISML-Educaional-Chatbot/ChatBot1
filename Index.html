@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+</head>
+<body style="background-color: #292929;">
+    <h1 style="color: #b1b1b1;">Educational ChatBot</h1>
+    <p style="color: #b1b1b1;">Welcome! This Chatbot is designed to answer any questions you may have, please feel free to ask questions about any subject<br>Please do not make any spelling mistakes, Try looking up some subjects to see the things you can search up in them to get more info!</p>
+    <div id="chat-container">
+        <div id="chat-response">
+            <!-- Chat messages will be displayed here -->
+        </div>
+        <form id="chat-form" action="/get_response" method="post">
+            <input type="text" id="user-message" name="user_message">
+            <button type="submit" style="color: #3093bb;">Send</button>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript code to handle form submission asynchronously
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('chat-form');
+            const sendButton = document.getElementById('send-button');
+            const chatResponse = document.getElementById('chat-response');
+            const userMessage = document.getElementById('user-message');
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault(); // Prevent form submission
+
+                const message = userMessage.value;
+                if (message.trim() !== '') {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/get_response', true);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                            // Update chat messages without reloading the page
+                            chatResponse.innerHTML = xhr.responseText;
+                            userMessage.value = ''; // Clear the input field
+                        }
+                    };
+                    xhr.send('user_message=' + encodeURIComponent(message));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
