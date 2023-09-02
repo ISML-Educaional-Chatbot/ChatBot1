@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 import uuid
 import os
+import requests
 
 class ChatbotHandler(BaseHTTPRequestHandler):
     chat_histories = {}
@@ -22,16 +23,20 @@ def do_GET(self):
         github_html_url = 'https://raw.githubusercontent.com/isml-educaional-chatbot/ChatBot1/main/index.html'
 
         # Fetch the HTML content from your GitHub repository
-        import urllib.request
-        with urllib.request.urlopen(github_html_url) as response:
-            html_content = response.read().decode('utf-8')
+        response = requests.get(github_html_url)
+        
+        if response.status_code == 200:
+            html_content = response.text
             self.wfile.write(html_content.encode('utf-8'))
+        else:
+            self.wfile.write(b'Failed to fetch HTML from GitHub.')
 
         session_id = self.get_session_id()
         self.set_session_cookie(session_id)
         chat_history = self.chat_histories.get(session_id, [])
 
     # The rest of your code for handling POST requests remains unchanged...
+
 
 
     def do_POST(self):
@@ -249,6 +254,9 @@ def run():
     httpd = HTTPServer(server_address, ChatbotHandler)
     print(f'Server started on port {port}')
     httpd.serve_forever()
+
+if __name__ == '__main__':
+    run()
 
 if __name__ == '__main__':
     run()
