@@ -19,7 +19,7 @@ class ChatbotHandler(BaseHTTPRequestHandler):
             self.end_headers()
             
             # Replace 'yourusername', 'yourrepository', and 'main' with your GitHub information
-            github_html_url = 'https://raw.githubusercontent.com/yourusername/yourrepository/main/index.html'
+            github_html_url = 'https://raw.githubusercontent.com/isml-educaional-chatbot/ChatBot1/main/index.html'
 
             # Fetch the HTML content from your GitHub repository
             import urllib.request
