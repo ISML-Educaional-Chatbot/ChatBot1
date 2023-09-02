@@ -42,7 +42,7 @@ def do_GET(self):
     def do_POST(self):
 
         user_message=""
-        if self.path == '/get_response':
+        if self.path == '/':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length).decode('utf-8')
             data = parse_qs(post_data)

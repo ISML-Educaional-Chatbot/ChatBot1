@@ -10,7 +10,7 @@
         <div id="chat-response">
             <!-- Chat messages will be displayed here -->
         </div>
-        <form id="chat-form" action="/get_response" method="post">
+        <form id="chat-form" action="/" method="post">
             <input type="text" id="user-message" name="user_message">
             <button type="submit" style="color: #3093bb;">Send</button>
         </form>
@@ -30,7 +30,7 @@
                 const message = userMessage.value;
                 if (message.trim() !== '') {
                     const xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/get_response', true);
+                    xhr.open('POST', '/', true);
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
