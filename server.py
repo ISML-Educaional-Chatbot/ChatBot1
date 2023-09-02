@@ -10,19 +10,30 @@ class ChatbotHandler(BaseHTTPRequestHandler):
 
     def set_session_cookie(self, session_id):
         self.send_header('Set-Cookie', f'session_id={session_id}; HttpOnly; Path=/')
-    
+
     def do_GET(self):
         global chat_history
         if self.path == '/':
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            with open('index.html', 'rb') as f:
-                self.wfile.write(f.read())
+            
+            # Replace 'yourusername', 'yourrepository', and 'main' with your GitHub information
+            github_html_url = 'https://raw.githubusercontent.com/yourusername/yourrepository/main/index.html'
+
+            # Fetch the HTML content from your GitHub repository
+            import urllib.request
+            with urllib.request.urlopen(github_html_url) as response:
+                html_content = response.read().decode('utf-8')
+                self.wfile.write(html_content.encode('utf-8'))
+
             session_id = self.get_session_id()
             self.set_session_cookie(session_id)
             session_id = self.get_session_id()
             chat_history = self.chat_histories.get(session_id, [])
+
+    # The rest of your code for handling POST requests remains unchanged...
+
 
     def do_POST(self):
 
@@ -233,11 +244,11 @@ class ChatbotHandler(BaseHTTPRequestHandler):
                 response_html = f'<p style="color: #b1b1b1;">Please enter something.</p>'
                 self.wfile.write(response_html.encode('utf-8'))    
                 chat_history.append(response_html)
-
 def run():
-    server_address = ('', 8000)
-    httpd = HTTPServer(server_address, ChatbotHandler)
-    print('Server started on port 8000')
+    port = int(os.environ.get("PORT", 8000))  # Use the PORT environment variable if available, or default to 8000
+    server_address = ('', port)
+    httpd = TCPServer(server_address, SimpleHTTPRequestHandler)
+    print(f'Server started on port {port}')
     httpd.serve_forever()
 
 if __name__ == '__main__':
